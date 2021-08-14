@@ -1,0 +1,30 @@
+head
+
+numero a
+numero b
+texto c
+
+leia(c)
+a : 6 + b
+b : 6,4
+c : "Salve"
+
+se (3 > 2,5) {
+  escreva(a)
+  se (2 < 1){
+    escreva(b)
+  } senao {
+    escreva("Nop")
+  }
+} senao {
+  escreva(c)
+}
+
+enquanto (a > b) {
+  a : a - 1
+  escreva(a)
+}
+
+escreva(c)
+
+tail
