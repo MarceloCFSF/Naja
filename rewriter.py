@@ -8,14 +8,12 @@ class RewriteListener(NajaListener):
 
   #Chave dos Dicionarios = Nome das Variaveis
   dicTipos = {}
-  dicValores = {}
   dicUtilizacao = {}
   q = Queue()
   tab = 0
   
-  def addVariavel(self, nomeVariavel, tipoVariavel, valorVariavel=None):
+  def addVariavel(self, nomeVariavel, tipoVariavel):
     self.dicTipos[nomeVariavel] = tipoVariavel
-    self.dicValores[nomeVariavel] = valorVariavel
     self.dicUtilizacao[nomeVariavel] = False
 
   def verificaVariavelDeclarada(self, nomeVariavel):
@@ -39,9 +37,13 @@ class RewriteListener(NajaListener):
         self.addVariavel(variable, type)
 
   def exitCmdleitura(self, ctx):
-    self.verificaVariavelDeclarada(ctx.ID().getText())
-    self.dicUtilizacao[ctx.ID().getText()] = True
-    self.q.put("  "*self.tab + ctx.ID().getText() + " = input()")
+    id = ctx.ID().getText()
+    self.verificaVariavelDeclarada(id)
+    self.dicUtilizacao[id] = True
+    if self.dicTipos.get(id) == 'numero':
+      self.q.put("  "*self.tab + id + " = float(input())")
+    else:
+      self.q.put("  "*self.tab + id + " = input()")
   
   def exitCmdescrita(self, ctx):
     id = ctx.escrita().getText()
@@ -65,7 +67,7 @@ class RewriteListener(NajaListener):
     if tipoID != tipoExpr: 
       raise SemanticException(f"Type Mismatch - Variable of Type {tipoID} receiving Type {tipoExpr}.")
 
-    exprs = ''.join(['*' if expr == '.' else expr for expr in ctx.expr().getText()])
+    exprs = ctx.expr().getText().replace('.', '*')
     self.q.put("  "*self.tab + ctx.ID().getText() + " = " + str(exprs))
 
   def enterCmdselecao(self, ctx):
@@ -78,19 +80,31 @@ class RewriteListener(NajaListener):
   def enterCmdelse(self, ctx):
     self.q.put("  "*(self.tab - 1) + "else:")
   
-  def enterCmdrepeticao(self, ctx):
+  def enterCmdenquanto(self, ctx):
     self.q.put("  "*self.tab + "while " + ctx.cmdcondicao().getText() + ":")
     self.tab += 1
 
-  def exitCmdrepeticao(self, ctx):
+  def exitCmdenquanto(self, ctx):
+    self.tab -= 1
+
+  def enterCmdexecute(self, ctx):
+    self.q.put("  "*self.tab + "while True:")
+    self.tab += 1
+
+  def exitCmdexecute(self, ctx):
+    self.q.put("  "*self.tab + "if not" + ctx.cmdcondicao().getText() + ":")
+    self.q.put("  "*(self.tab + 1) + "break")
     self.tab -= 1
 
   def exitCmdcondicao(self, ctx):
     vars = ctx.ID()
-
+    numbers = ctx.NUMBER()
+    
     for var in vars:
       self.verificaVariavelDeclarada(var.getText())
       self.dicUtilizacao[var.getText()] = True
+      if numbers != None and self.dicTipos.get(var.getText()) == 'texto':
+        raise SemanticException(f"Type Mismatch - It can not operate a String with a Number.") 
 
   def exitExpr(self, ctx):
     IDs = ctx.termo()
@@ -125,7 +139,6 @@ class RewriteListener(NajaListener):
       line = self.q.get()
       
       line = line.replace(',','.')
-      
 
       f.write(line + "\n")
 

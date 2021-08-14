@@ -4,10 +4,7 @@ grammar Naja;
 
 // Definindo Regras Sintáticas
 
-prog	: 'head' decl bloco 'tail'
-      ;
-
-decl  :  (declaravar)+
+prog	: 'head' bloco 'tail'
       ;
        
 declaravar :  tipo ID (VIR ID)*
@@ -19,11 +16,13 @@ tipo       : 'numero' | 'texto'
 bloco	: (cmd)+
       ;
 
-cmd	:  cmdleitura  
+cmd	:  cmdleitura
+      |  declaravar
     	|  cmdescrita 
  	|  cmdattrib
  	|  cmdselecao
-    	|  cmdrepeticao  
+    	|  cmdenquanto
+      |  cmdexecute  
 	;
 
 cmdleitura	: 'leia' AP ID FP 
@@ -46,10 +45,15 @@ cmdselecao  :  'se' cmdcondicao ACH
 cmdelse     : 'senao' ACH (cmd+) FCH
             ;
 
-cmdrepeticao : 'enquanto' cmdcondicao ACH 
+cmdenquanto : 'enquanto' cmdcondicao ACH 
                   (cmd)+ 
-                FCH
-             ;
+              FCH
+            ;
+
+cmdexecute  : 'execute' ACH
+                  (cmd)+ 
+               FCH 'enquanto' cmdcondicao
+            ;
 			
 cmdcondicao : AP (ID | NUMBER) OPREL (ID | NUMBER) FP
             ;
@@ -98,7 +102,7 @@ FCH  : '}'
      ;
 
 // Operadores relacionais
-OPREL : '>' | '<' | '>=' | '<=' | '=' | '!='
+OPREL : '>' | '<' | '>=' | '<=' | '==' | '!='
       ;
 
 // Identificadores 

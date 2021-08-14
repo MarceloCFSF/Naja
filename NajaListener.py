@@ -17,15 +17,6 @@ class NajaListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by NajaParser#decl.
-    def enterDecl(self, ctx:NajaParser.DeclContext):
-        pass
-
-    # Exit a parse tree produced by NajaParser#decl.
-    def exitDecl(self, ctx:NajaParser.DeclContext):
-        pass
-
-
     # Enter a parse tree produced by NajaParser#declaravar.
     def enterDeclaravar(self, ctx:NajaParser.DeclaravarContext):
         pass
@@ -116,12 +107,21 @@ class NajaListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by NajaParser#cmdrepeticao.
-    def enterCmdrepeticao(self, ctx:NajaParser.CmdrepeticaoContext):
+    # Enter a parse tree produced by NajaParser#cmdenquanto.
+    def enterCmdenquanto(self, ctx:NajaParser.CmdenquantoContext):
         pass
 
-    # Exit a parse tree produced by NajaParser#cmdrepeticao.
-    def exitCmdrepeticao(self, ctx:NajaParser.CmdrepeticaoContext):
+    # Exit a parse tree produced by NajaParser#cmdenquanto.
+    def exitCmdenquanto(self, ctx:NajaParser.CmdenquantoContext):
+        pass
+
+
+    # Enter a parse tree produced by NajaParser#cmdexecute.
+    def enterCmdexecute(self, ctx:NajaParser.CmdexecuteContext):
+        pass
+
+    # Exit a parse tree produced by NajaParser#cmdexecute.
+    def exitCmdexecute(self, ctx:NajaParser.CmdexecuteContext):
         pass
 
 

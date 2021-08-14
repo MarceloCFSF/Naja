@@ -4,14 +4,28 @@ numero a
 numero b
 texto c
 
-leia(c)
-a : 6 + b
-b : 6,4
-c : "Salve"
+escreva("Digite um numero")
+leia(a)
+escreva(a)
 
+escreva("Digite um numero")
+leia(b)
+escreva(b)
+
+escreva("Digite um texto")
+leia(c)
+escreva(c)
+
+a : 6.b
+b : 6,4
+c : "Hello World"
+
+escreva("Estrutura if else")
 se (3 > 2,5) {
   escreva(a)
-  se (2 < 1){
+  numero d
+  d : 2
+  se (d == 1){
     escreva(b)
   } senao {
     escreva("Nop")
@@ -20,10 +34,17 @@ se (3 > 2,5) {
   escreva(c)
 }
 
+escreva("Estrutura de repeticao while")
 enquanto (a > b) {
   a : a - 1
   escreva(a)
 }
+
+escreva("Estrutura de repeticao do while")
+execute {
+  escreva(b)
+  b : b - 1
+} enquanto (b > 4)
 
 escreva(c)
 
